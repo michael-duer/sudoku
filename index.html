@@ -10,19 +10,19 @@
         <script src='script.js' defer></script>
     </head>
     <header>
-        <h1>Let's Play Sudoku! <img src="./img/favicon.svg" class="icon" id="sudoku-icon" alt="sudoku"></h1>
+        <h1>Let's Play Sudoku! <img src="./img/favicon.svg" class="icon" id="sudoku-icon" alt="sudoku"> </h1>
         <div id="setup-game">
             <div id="difficulty">
-                <h2>Choose Difficulty <img src="./img/difficulty.svg" class="icon" id="difficulty-icon" alt="difficulty">: </h2>
-                <label><input type="radio" id="diff-1" name="difficulty" value="easy" checked> Easy</label>
-                <label><input type="radio" id="diff-2" name="difficulty" value="medium"> Medium</label>
-                <label><input type="radio" id="diff-3" name="difficulty" value="hard"> Hard</label>
+                <h2 id="difficulty-title">Choose Difficulty <img src="./img/difficulty.svg" class="icon" id="difficulty-icon" alt="difficulty">: </h2>
+                <label><input type="radio" class="radio-bttn" id="diff-1" name="difficulty" value="easy" checked> Easy</label>
+                <label><input type="radio" class="radio-bttn" id="diff-2" name="difficulty" value="medium"> Medium</label>
+                <label><input type="radio" class="radio-bttn" id="diff-3" name="difficulty" value="hard"> Hard</label>
             </div>
             <div id="theme">
-                <h2>Choose Theme <img src="./img/theme.svg" class="icon" id="theme-icon" alt="theme">: </h2>
-                <label><input type="radio" id="theme-1" name="theme" value="light" checked> Light</label>
-                <label><input type="radio" id="theme-2" name="theme" value="dark"> Dark</label>
-                <label><input type="radio" id="theme-3" name="theme" value="rainbow"> Rainbow</label>
+                <h2 id="theme-title">Choose Theme <img src="./img/theme.svg" class="icon" id="theme-icon" alt="theme">: </h2>
+                <label><input type="radio" class="radio-bttn" id="theme-1" name="theme" value="light" checked> Light</label>
+                <label><input type="radio" class="radio-bttn" id="theme-2" name="theme" value="dark"> Dark</label>
+                <label><input type="radio" class="radio-bttn" id="theme-3" name="theme" value="rainbow"> Rainbow</label>
             </div>
         </div>
         <button id="start-bttn">Create New Game!</button>
@@ -50,14 +50,14 @@
     </body>
     <footer>
         <p>Made by Michael Dür</p>
-        <p>Link zu meinem Github <a href="https://github.com/michael-duer/sudoku" title="Github Repository" target="_blank">Repository <i class="fab fa-github"></i></a></p> <br>    
+        <p>Link to my Github <a href="https://github.com/michael-duer/sudoku" title="Github Repository" target="_blank">Repository <i class="fab fa-github"></i></a></p> <br>    
         <div class="credits"> 
-            <p>Icons erstellt von:</p>
+            <p>Icons created by:</p>
             <a href="https://www.flaticon.com/authors/surang" title="surang">surang</a>,
             <a href="https://www.freepik.com" title="Freepik">Freepik</a>,
             <br>
-            von <a href="https://www.flaticon.com/de/" title="Flaticon" target="_blank"> Flaticon </a>
-            und <a href="https://fontawesome.com/" title="Fontawesome" target="_blank"> Fontawesome</a>
+            from <a href="https://www.flaticon.com/de/" title="Flaticon" target="_blank"> Flaticon </a>
+            and <a href="https://fontawesome.com/" title="Fontawesome" target="_blank"> Fontawesome</a>
         </div>
     </footer>
 </html>
