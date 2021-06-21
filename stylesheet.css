@@ -96,12 +96,11 @@ p#timer, p#lives {
 
 #number-container {
     
-    justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
     width: 210px;
-    margin: 50px 0px 50px 50px;
+    height: 250px;
+    margin: 170px 0px 50px 50px;
 }
 
 #number-container > p {

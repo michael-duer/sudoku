@@ -22,42 +22,69 @@ const easy = [
 
 window.onload = function() {
     //Run startGame function when bttn gets clicked
-    getId("start-bttn").addEventListener("click", startGame);
+    getElementById("start-bttn").addEventListener("click", startGame);
+
+    //Set theme when bttn gets clicked
+    getElementById("theme-1").addEventListener("click", setTheme);
+    getElementById("theme-2").addEventListener("click", setTheme);
+    getElementById("theme-3").addEventListener("click", setTheme);
+
+    //Add eventlistener to each number in number-container
+    for (let i = 0; i < getElementById("number-container").children.length; i++) {
+        getElementById("number-container").children[i].addEventListener("click", function() {
+            //If selecting ist not disabled
+            if (!disableSelect) {
+                //If number is already selceted
+                if (this.classList.contains("selected")) {
+                    //Then remove selection
+                    this.classList.remove("selected");
+                    selectedNum = null;
+                } else {
+                    //Deselect all other numbers
+                    for (let i = 0; i <9; i++) {
+                        getElementById("number-container").children[i].classList.remove("selected");
+                    }
+                    //Select it and update the selectedNum variable
+                    this.classList.add("selected");
+                    selectedNum = this;
+                    updateMove();
+                }
+            }
+        });
+    }
 }
 
 function startGame() {
     let board;
     //choose difficulty
-    if (getId("diff-1").checked) board = easy[0];
-    else if (getId("diff-2").checked) board = medium[0];
+    if (getElementById("diff-1").checked) board = easy[0];
+    else if (getElementById("diff-2").checked) board = medium[0];
     else board = hard[0];
 
     //set lives and enable selecting numbers and tiles
     lives = 3;
     disableSelect = false;
-    getId("lives").textContent = "Lives Remaining " + lives;
+    getElementById("lives").textContent = "Lives Remaining " + lives;
 
     //Create board based on difficulty
     generateBoard(board);
     //Starts timer
     startTimer();
-    //Set theme
-    setTheme();
 
     //Shows number-container by changing class
-    getId("number-container").classList.remove("hidden");
-    getId("number-container").classList.add("flex");
+    getElementById("number-container").classList.remove("hidden");
+    getElementById("number-container").classList.add("flex");
 }
 
 function startTimer() {
     //Sets timer for first second
     timeCounter = 0;
-    getId("timer").textContent = timeConversion(timeCounter)
+    getElementById("timer").textContent = timeConversion(timeCounter)
     //Sets timer to update every second
     timer = setInterval(function() {
         timeCounter ++;
         //add game over option if it takes too long?
-        getId("timer").textContent = timeConversion(timeCounter);
+        getElementById("timer").textContent = timeConversion(timeCounter);
     }, 1000)
 }
 //Converts seconds into string MM:SS format
@@ -71,7 +98,7 @@ function timeConversion(time) {
 
 function setTheme() {
     //Sets theme based on input by first deleting previous and add the new one
-    if (getId("theme-1").checked) {
+    if (getElementById("theme-1").checked) {
         qs("body").classList.remove("dark");
         qs("h1").classList.remove("dark");
         qs("#difficulty-title").classList.remove("dark");
@@ -80,7 +107,7 @@ function setTheme() {
         qs("#lives").classList.remove("dark");
 
         qs("body").classList.remove("rainbow");
-    } else if (getId("theme-2").checked) {
+    } else if (getElementById("theme-2").checked) {
         qs("body").classList.remove("rainbow");
 
         qs("body").classList.add("dark");
@@ -116,6 +143,26 @@ function generateBoard(board) {
             tile.textContent = board.charAt(i);
         } else {
             //Add click event listener to tile
+            tile.addEventListener("click", function() {
+                //if selecting is not disabled
+                if (!disableSelect) {
+                    //if tile is already selected
+                    if (tile.classList.contains("selected")) {
+                        //Then remove selection
+                        tile.classList.remove("selected");
+                        selectedTile = null;
+                    } else {
+                        //Deselect all other tiles
+                        for (let i = 0; i < 81; i++) {
+                            qsa(".tile")[i].classList.remove("selected");
+                        }
+                        //Add selection and update variable
+                        tile.classList.add("selected");
+                        selectedTile = tile;
+                        updateMove();
+                    }
+                }
+            })
         }
 
         //Assign tile id and increment for next tile
@@ -144,8 +191,89 @@ function generateBoard(board) {
             tile.classList.add("topBorder");
         }
         //Add tile to board
-        getId("board").appendChild(tile);
+        getElementById("board").appendChild(tile);
     }
+}
+
+function updateMove() {
+    //if a tile and a number is selected
+    if (selectedTile && selectedNum) {
+        //Set the tile to the correct number
+        selectedTile.textContent = selectedNum.textContent;
+        //If the number matches the corresponding number in the solution keu
+        if (checkCorrect(selectedTile)) {
+            //Deselects the tiles
+            selectedTile.classList.remove("selected");
+            selectedNum.classList.remove("selected");
+            //Clear selected Variables
+            selectedNum = null;
+            selectedTile = null;
+            //Check if board is completed
+            if (checkDone()) {
+                endGame();
+            }
+
+        //If the number does not match solution
+        } else {
+            //Disable selecting new numbers for one second
+            disableSelect = true;
+            //Make the tile turn red
+            selectedTile.classList.add("incorrect");
+            //Run in one second
+            setTimeout(function() {
+                //Subtract lives by one
+                lives --;
+                //if no lives remaining end the game
+                if (lives === 0) {
+                    endGame();
+                } else {
+                    //If lives is not equal to 0
+                    //Update lives text
+                    getElementById("lives").textContent = "Lives Remaining: " + lives;
+                    //Renable selecting numbers and tiles
+                    disableSelect = false;
+                }
+                //Restore tile color and remove selected from both
+                selectedTile.classList.remove("incorrect");
+                selectedTile.classList.remove("selected");
+                selectedNum.classList.remove("selected");
+                //Clear the tiles and clear selected variable
+                selectedTile.textContent = "";
+                selectedTile = null;
+                selectedNum = null;
+            }, 1000);
+        }
+    }
+}
+
+function checkDone() {
+    let tiles = qsa(".tile");
+    for (let i = 0; i < tiles.length; i++) {
+        if (tiles[i].textContent === "") return false;
+    }
+    return true;
+}
+
+function endGame() {
+    //Disable moves and stop timer
+    disableSelect = true;
+    clearTimeout(timer);
+    //Display win or loss message
+    if (lives === 0) {
+        getElementById("lives").textContent = "You Lost!"
+    } else {
+        getElementById("lives").textContent = "You Won!"
+    }
+}
+
+function checkCorrect(tile) {
+    //Set solution based on difficulty solution
+    let solution;
+    if (getElementById("diff-1").checked) solution = easy[1];
+    else if (getElementById("diff-2").checked) solution = medium[1];
+    else solution = hard[1];
+    //If tiles numbers is equal to solutions number
+    if (solution.charAt(tile.id) === tile.textContent) return true;
 }
 
 function clearPrevious() {
@@ -158,8 +286,8 @@ function clearPrevious() {
     //Clear previous timer
     if (timer) clearTimeout(timer);
     //Deselect any number
-    for (let i = 0; i < getId("number-container").children.length; i++) {
-        getId("number-container").children[i].classList.remove("selected");
+    for (let i = 0; i < getElementById("number-container").children.length; i++) {
+        getElementById("number-container").children[i].classList.remove("selected");
     }
     //Clear selected variables
     selectedTile = null;
@@ -169,7 +297,7 @@ function clearPrevious() {
 
 
 //helper functions
-function getId(id) {    //umbenenne
+function getElementById(id) {
     return document.getElementById(id);
 }
 
