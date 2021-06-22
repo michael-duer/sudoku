@@ -141,7 +141,7 @@ function generateBoard(board) {
         if (board.charAt(i) != "-") {
             //Set tile text to correct number
             tile.textContent = board.charAt(i);
-        } //else {
+        }
             //Add click event listener to tile
              tile.addEventListener("click", function() {
                 //if selecting is not disabled
@@ -152,7 +152,7 @@ function generateBoard(board) {
                         tile.classList.remove("selected");
                         //Remove highlight from tiles
                         removeHighlight();
-                        lectedTile = null;
+                        selectedTile = null;
                     } else {
                         //Deselect all other tiles
                         for (let i = 0; i < 81; i++) {
@@ -167,7 +167,6 @@ function generateBoard(board) {
                     }
                 }
             })
-    //    }
 
         //Assign tile id and increment for next tile
         tile.id = idCount;
