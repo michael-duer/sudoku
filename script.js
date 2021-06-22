@@ -64,7 +64,7 @@ function startGame() {
     //set lives and enable selecting numbers and tiles
     lives = 3;
     disableSelect = false;
-    getElementById("lives").textContent = "Lives Remaining " + lives;
+    getElementById("lives").textContent = "Lives Remaining: " + lives;
 
     //Create board based on difficulty
     generateBoard(board);
@@ -141,29 +141,33 @@ function generateBoard(board) {
         if (board.charAt(i) != "-") {
             //Set tile text to correct number
             tile.textContent = board.charAt(i);
-        } else {
+        } //else {
             //Add click event listener to tile
-            tile.addEventListener("click", function() {
+             tile.addEventListener("click", function() {
                 //if selecting is not disabled
                 if (!disableSelect) {
                     //if tile is already selected
                     if (tile.classList.contains("selected")) {
                         //Then remove selection
                         tile.classList.remove("selected");
-                        selectedTile = null;
+                        //Remove highlight from tiles
+                        removeHighlight();
+                        lectedTile = null;
                     } else {
                         //Deselect all other tiles
                         for (let i = 0; i < 81; i++) {
                             qsa(".tile")[i].classList.remove("selected");
                         }
-                        //Add selection and update variable
+                        //Add selection, update variable and highlight same value tiles
                         tile.classList.add("selected");
                         selectedTile = tile;
+
+                        highlightTiles(selectedTile);                     
                         updateMove();
                     }
                 }
             })
-        }
+    //    }
 
         //Assign tile id and increment for next tile
         tile.id = idCount;
@@ -198,8 +202,10 @@ function generateBoard(board) {
 function updateMove() {
     //if a tile and a number is selected
     if (selectedTile && selectedNum) {
-        //Set the tile to the correct number
-        selectedTile.textContent = selectedNum.textContent;
+        //Set the tile to the correct number if tile is empty
+        if (selectedTile.textContent === "") { 
+            selectedTile.textContent = selectedNum.textContent;
+        }
         //If the number matches the corresponding number in the solution keu
         if (checkCorrect(selectedTile)) {
             //Deselects the tiles
@@ -245,6 +251,31 @@ function updateMove() {
         }
     }
 }
+
+//add higlighted class to tiles with same value
+function highlightTiles(selectedTile) {
+    //remove previous higlight
+    removeHighlight();
+    let highlightValue = selectedTile.textContent;
+    //Check if selected tile is not empty
+    if (highlightValue != "") {
+        //Check all tiles for same value
+        for (let i = 0; i < 81; i++) {
+            if (qsa(".tile")[i].textContent === highlightValue) {
+                //add higlighted class to tiles with same value
+                qsa(".tile")[i].classList.add("highlighted");
+            }
+        }
+    }
+}
+
+function removeHighlight() {
+    //Remove highlight from tiles
+    for (let i = 0; i < 81; i++) {
+        qsa(".tile")[i].classList.remove("highlighted");
+   }
+}
+
 
 function checkDone() {
     let tiles = qsa(".tile");
