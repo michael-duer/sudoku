@@ -1,6 +1,7 @@
 //Load boards from file or manually
 const easy = [
-    "6------7------5-2------1---362----81--96-----71--9-4-5-2---651---78----345-------",
+    //"6------7------5-2------1---362----81--96-----71--9-4-5-2---651---78----345-------",
+    "-85329174971485326234761859362574981549618732718293465823946517197852643456137298",
     "685329174971485326234761859362574981549618732718293465823946517197852643456137298"
   ];
   const medium = [
@@ -36,16 +37,26 @@ window.onload = function() {
             if (!disableSelect) {
                 //If number is already selceted
                 if (this.classList.contains("selected")) {
-                    //Then remove selection
+                    //Then remove selection and theme
                     this.classList.remove("selected");
+                    this.classList.remove("dark");
+                    this.classList.remove("rainbow");
                     selectedNum = null;
                 } else {
-                    //Deselect all other numbers
+                    //Deselect all other numbers and removwe theme
                     for (let i = 0; i <9; i++) {
                         getElementById("number-container").children[i].classList.remove("selected");
+                        getElementById("number-container").children[i].classList.remove("dark");
+                        getElementById("number-container").children[i].classList.remove("rainbow");
                     }
-                    //Select it and update the selectedNum variable
+                    //Select it, add theme and update the selectedNum variable
                     this.classList.add("selected");
+                    if (isDarkmode() === true) {
+                        this.classList.add("dark");
+                    }
+                    if (isRainbow() === true) {
+                        this.classList.add("rainbow");
+                    }
                     selectedNum = this;
                     updateMove();
                 }
@@ -66,8 +77,14 @@ function startGame() {
     disableSelect = false;
     getElementById("lives").textContent = "Lives Remaining: " + lives;
 
+    //hide trophy
+    getElementById('trophy-div').classList.add("hidden");
+    getElementById("trophy-div").classList.remove("flex");
+
     //Create board based on difficulty
     generateBoard(board);
+    //set theme
+    setTheme();
     //Starts timer
     startTimer();
 
@@ -97,34 +114,38 @@ function timeConversion(time) {
 }
 
 function setTheme() {
+    //create array with all elements that will change in different themes
+    themeElements = ["body", "header", "h1", "#difficulty-title", "#theme-title", "#timer", "#lives", "label.custom-radio-bttn",
+                    ".custom-radio-bttn .checkmark", ".custom-radio-bttn .checkmark", "#radio-title", "#start-bttn",
+                     "p.selected", "p.selected.highlighted", "p", ".tile", "#number-container"]
+
     //Sets theme based on input by first deleting previous and add the new one
     if (getElementById("theme-1").checked) {
-        qs("body").classList.remove("dark");
-        qs("h1").classList.remove("dark");
-        qs("#difficulty-title").classList.remove("dark");
-        qs("#theme-title").classList.remove("dark");
-        qs("#timer").classList.remove("dark");
-        qs("#lives").classList.remove("dark");
+        //remove dark and rainbow class from each element
+        for (var i = 0; i<themeElements.length; i++) {
+            removeClass(themeElements[i], "dark");
+            removeClass(themeElements[i], "rainbow");
+        }
 
-        qs("body").classList.remove("rainbow");
     } else if (getElementById("theme-2").checked) {
-        qs("body").classList.remove("rainbow");
+        //remove rainbow class from each element
+        for (var i = 0; i<themeElements.length; i++) {
+            removeClass(themeElements[i], "rainbow");
+        }
+        //add dark class for each element
+        for (var i = 0; i<themeElements.length; i++) {
+            addClass(themeElements[i], "dark");
+        }
 
-        qs("body").classList.add("dark");
-        qs("h1").classList.add("dark");
-        qs("#difficulty-title").classList.add("dark");
-        qs("#theme-title").classList.add("dark");
-        qs("#timer").classList.add("dark");
-        qs("#lives").classList.add("dark");
     } else {
-        qs("body").classList.remove("dark");
-        qs("h1").classList.remove("dark");
-        qs("#difficulty-title").classList.remove("dark");
-        qs("#theme-title").classList.remove("dark");
-        qs("#timer").classList.remove("dark");
-        qs("#lives").classList.remove("dark");
-
-        qs("body").classList.add("rainbow");
+         //remove dark class from each element
+        for (var i = 0; i<themeElements.length; i++) {
+            removeClass(themeElements[i], "dark");
+        }
+        //add rainbow class for each element
+        for (var i = 0; i<themeElements.length; i++) {
+            addClass(themeElements[i], "rainbow");
+        }
     }
 }
 
@@ -148,8 +169,16 @@ function generateBoard(board) {
                 if (!disableSelect) {
                     //if tile is already selected
                     if (tile.classList.contains("selected")) {
-                        //Then remove selection
+                        //Then remove selection and theme depending on current theme
                         tile.classList.remove("selected");
+                        if (isDarkmode) {
+                            tile.classList.remove("rainbow");
+                        } else if (isRainbow) {
+                            tile.classList.remove("dark");
+                        } else {
+                            tile.classList.remove("dark");
+                            tile.classList.remove("rainbow");
+                        }
                         //Remove highlight from tiles
                         removeHighlight();
                         selectedTile = null;
@@ -160,6 +189,12 @@ function generateBoard(board) {
                         }
                         //Add selection, update variable and highlight same value tiles
                         tile.classList.add("selected");
+                        if (isDarkmode() === true) {
+                            tile.classList.add("dark");
+                        }
+                        if (isRainbow() === true) {
+                            tile.classList.add("rainbow");
+                        }
                         selectedTile = tile;
 
                         highlightTiles(selectedTile);                     
@@ -263,6 +298,12 @@ function highlightTiles(selectedTile) {
             if (qsa(".tile")[i].textContent === highlightValue) {
                 //add higlighted class to tiles with same value
                 qsa(".tile")[i].classList.add("highlighted");
+                if (isDarkmode() === true) {
+                    qsa(".tile")[i].classList.add("dark");
+                }
+                if (isRainbow() === true) {
+                    qsa(".tile")[i].classList.add("rainbow");
+                }
             }
         }
     }
@@ -272,6 +313,9 @@ function removeHighlight() {
     //Remove highlight from tiles
     for (let i = 0; i < 81; i++) {
         qsa(".tile")[i].classList.remove("highlighted");
+        //remove theme depending on current theme
+   //     qsa(".tile")[i].classList.remove("dark");
+   //     qsa(".tile")[i].classList.remove("rainbow");
    }
 }
 
@@ -290,9 +334,12 @@ function endGame() {
     clearTimeout(timer);
     //Display win or loss message
     if (lives === 0) {
-        getElementById("lives").textContent = "You Lost!"
+        getElementById("lives").textContent = "You Lost!";
     } else {
-        getElementById("lives").textContent = "You Won!"
+        getElementById("lives").textContent = "You Won!";
+        //show trophy svg
+        getElementById('trophy-div').classList.remove("hidden");
+        getElementById("trophy-div").classList.add("flex");
     }
 }
 
@@ -337,4 +384,24 @@ function qs(selector) {
 
 function qsa(selector) {
     return document.querySelectorAll(selector);
+}
+
+function addClass(object, classAttribute) {
+    qsa(object).forEach((element) => {
+        element.classList.add(classAttribute)
+    });
+}
+
+function removeClass(object, classAttribute) {
+    qsa(object).forEach((element) => {
+        element.classList.remove(classAttribute)
+    });
+}
+
+function isDarkmode() {
+    return getElementById("theme-2").checked
+}
+
+function isRainbow() {
+    return getElementById("theme-3").checked
 }

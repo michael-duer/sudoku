@@ -10,27 +10,61 @@
         <script src='script.js' defer></script>
     </head>
     <header>
-        <h1>Let's Play Sudoku! <img src="./img/favicon.svg" class="icon" id="sudoku-icon" alt="sudoku"> </h1>
+        <h1>Let's Play Sudoku!</h1>
         <div id="setup-game">
             <div id="difficulty">
                 <h2 id="difficulty-title">Choose Difficulty <img src="./img/difficulty.svg" class="icon" id="difficulty-icon" alt="difficulty">: </h2>
-                <label><input type="radio" class="radio-bttn" id="diff-1" name="difficulty" value="easy" checked> Easy</label>
-                <label><input type="radio" class="radio-bttn" id="diff-2" name="difficulty" value="medium"> Medium</label>
-                <label><input type="radio" class="radio-bttn" id="diff-3" name="difficulty" value="hard"> Hard</label>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="diff-1" name="difficulty" value="easy" checked>
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Easy</p>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="diff-2" name="difficulty" value="medium">
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Medium</p>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="diff-3" name="difficulty" value="hard">
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Hard</p>
+
             </div>
             <div id="theme">
                 <h2 id="theme-title">Choose Theme <img src="./img/theme.svg" class="icon" id="theme-icon" alt="theme">: </h2>
-                <label><input type="radio" class="radio-bttn" id="theme-1" name="theme" value="light" checked> Light</label>
-                <label><input type="radio" class="radio-bttn" id="theme-2" name="theme" value="dark"> Dark</label>
-                <label><input type="radio" class="radio-bttn" id="theme-3" name="theme" value="rainbow"> Rainbow</label>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="theme-1" name="theme" value="light" checked>
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Light</p>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="theme-2" name="theme" value="dark">
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Dark</p>
+
+                <label class="custom-radio-bttn">
+                    <input type="radio" class="radio-bttn" id="theme-3" name="theme" value="rainbow">
+                    <span class="checkmark"></span>
+                </label>
+                <p id="radio-title">Rainbow</p>
+
             </div>
         </div>
         <button id="start-bttn">Create New Game!</button>
     </header>
     <body>
         <div id="stats">
-            <p id="timer"></p>
-            <p id="lives"></p>
+            <p id="timer"></p> 
+            <p id="lives">
+                <div class="hidden" id="trophy-div"><img src="./img/trophy.svg" id="trophy-icon" alt="trophy"></div>
+            </p>
         </div>
 
         <div id="game">
@@ -52,7 +86,7 @@
         <p>Made by Michael Dür</p>
         <p>Link to my Github <a href="https://github.com/michael-duer/sudoku" title="Github Repository" target="_blank">Repository <i class="fab fa-github"></i></a></p> <br>    
         <div class="credits"> 
-            <p>Icons created by:</p>
+            <p>Icons made by:</p>
             <a href="https://www.flaticon.com/authors/surang" title="surang">surang</a>,
             <a href="https://www.freepik.com" title="Freepik">Freepik</a>,
             <br>
